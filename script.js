@@ -9,9 +9,12 @@ input.addEventListener('keypress', function(event) {
         .then(data => {
             let searchResults = '';
             let imagesArray = data.collection.items;
+            console.log(data);
+
             imagesArray.forEach(function(result){
                 let imageHref = result.links[0].href;
-                searchResults += `<img src=${imageHref}>`;
+                let imageDescription = result.data[0].description;
+                searchResults += `<img src=${imageHref} title="${imageDescription}">`;
             })
             output.innerHTML = searchResults;
             output.addEventListener('click', expand);
@@ -21,20 +24,18 @@ input.addEventListener('keypress', function(event) {
 });
 
 function expand(event) {
-    // let image = document.getElementsByTagName('img');
-    let thisImage = event.target.src;
+    let thisImageUrl = event.target.src;
+    let thisImageDescription = event.target.title;
     const expandedImage = document.querySelector('.expanded-image');
 
     expandedImage.classList.add('show');
-    expandedImage.innerHTML = `<span>&#128500;</span><img src=${thisImage}>`;
+    expandedImage.innerHTML =
+    `<span>&#128500;</span>
+    <img src=${thisImageUrl}>
+    <div>${thisImageDescription}</div>`;
+
     expandedImage.addEventListener('click', function(){
         expandedImage.classList.remove('show');
 
     })
-    // console.log(thisImage);
 }
-
-
-/*   if (r.target.status === 200) {
-    console.log(r.target.response);
-} */
