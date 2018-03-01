@@ -23,6 +23,10 @@ body {
     transition: 0.2s;
 }
 
+#output-display div {
+    background-color: aqua;
+}
+
 .expanded-image {
     position: absolute;
     top: 50%;
