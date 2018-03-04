@@ -6,14 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-    <title>NASA Media Search</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <title>NASA Image Search</title>
 </head>
 <body>
-    <h1>NASA Media Search</h1>
-    <input type="text" id="user-search" placeholder="search nasa">
+    <h1>NASA Image Search</h1>
+    <div class="input-container">
+        <input type="text" id="user-search" placeholder="Search NASA">
+    </div>
     <div id="output-display"></div>
-    <div class="expanded-image"></div>
+    <div class="expanded-image">
+        <!-- <span>X</span> -->
+        <img class="large-image" src="">
+        <div class="image-description"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>

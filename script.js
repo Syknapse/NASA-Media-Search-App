@@ -8,37 +8,56 @@ let previous = null;
 const searchResults = [];
 let searchLinks = [];
 
-input.addEventListener('keypress', function(event) {
+/*
+/// Event listeners ///
+*/
+// Search
+input.addEventListener('keypress', event => {
     if(event.key === 'Enter'){
-        // reset prev/next
-        next = null;
-        previous = null;
-        // default value
-        if (input.value == '') {
-            input.value += 'earth';
-        }
-        fetch(`${nasaApi}search?q=${input.value}&media_type=image`)
-        .then(response => response.json())
-        .then(data => {
-            searchResults.splice(0, ...data.collection.items);
-            searchLinks = data.collection.links;
-
-            // stops an error if no 'next' link available
-            if (data.collection.links && searchResults.length != 0) {
-                next = data.collection.links['0'].href;
-            }
-        })
-        .then(displayResults)
-        .catch(error => console.log(error))
+        searchNASA();
+        input.blur();
     }
 });
 
-function displayResults() {
-    if (searchResults.length != 0) {
-        showImages();
-    } else {
-        output.innerHTML = `<div>Sorry, no matches. Try a different search</div>`;
+// prev/next page buttons
+output.addEventListener('click', event => {
+    if (event.target && event.target.matches('button#next-btn') && next != null) {
+        fetchNext();
+    } else if (event.target && event.target.matches('button#previous-btn') && previous != null) {
+        fetchPrevious();
     }
+});
+
+// Expand image
+output.addEventListener('click', expand);
+/*
+/// Event listeners END///
+*/
+
+function searchNASA() {
+    next = null;
+    previous = null;
+    // default value
+    if (input.value == '') {
+        input.value += 'earth';
+    }
+    fetch(`${nasaApi}search?q=${input.value}&media_type=image`)
+    .then(response => response.json())
+    .then(data => {
+        searchResults.splice(0, ...data.collection.items);
+        searchLinks = data.collection.links;
+
+        // stops an error if no 'next' link available
+        if (data.collection.links && searchResults.length != 0) {
+            next = data.collection.links['0'].href;
+        }
+    })
+    .then(displayResults)
+    .catch(error => console.log(error))
+}
+
+function displayResults() {
+    searchResults.length != 0 ? showImages() : output.innerHTML = `<div>Sorry, no matches. Try a different search</div>`;
 }
 
 function showImages() {
@@ -50,11 +69,10 @@ function showImages() {
         resultsDisplay += `<img src=${imageHref}>`;
     })
     output.innerHTML =
-    `<button id="previous-btn">PREVIOUS</button>
-    <button id="next-btn">NEXT</button>
+    `<button id="previous-btn">Previous</button>
+    <button id="next-btn">Next</button>
     ${resultsDisplay}`;
     disableUnusedButton();
-    output.addEventListener('click', expand);
 }
 
 // if no pages available or has reached last/first page
@@ -67,10 +85,8 @@ function disableUnusedButton() {
     }
 }
 
-// prev/next page buttons
-output.addEventListener('click', function(event) {
-    if (event.target && event.target.matches('button#next-btn') && next != null) {
-        fetch(next)
+function fetchNext() {
+    fetch(next)
         .then(response => response.json())
         .then(data => {
             searchResults.splice(0, ...data.collection.items)
@@ -81,8 +97,10 @@ output.addEventListener('click', function(event) {
         })
         .then(displayResults)
         .catch(error => console.log(error))
-    } else if (event.target && event.target.matches('button#previous-btn') && previous != null) {
-        fetch(previous)
+}
+
+function fetchPrevious() {
+    fetch(previous)
         .then(response => response.json())
         .then(data => {
             searchResults.splice(0, ...data.collection.items);
@@ -96,8 +114,7 @@ output.addEventListener('click', function(event) {
         })
         .then(displayResults)
         .catch(error => console.log(error))
-    }
-});
+}
 
 function isNext(link) {
     return link.prompt === 'Next';
@@ -114,17 +131,29 @@ function expand(event) {
         const description = thisImage["0"].data["0"].description;
         const imageUrl = thisImage["0"].links["0"].href;
         const expandedImage = document.querySelector('.expanded-image');
+        const largeImage = document.querySelector('.large-image');
+        const descriptionPanel = document.querySelector('.image-description');
+
+        largeImage.setAttribute('src', imageUrl);
+        descriptionPanel.innerHTML = description;
+
+        largeImage.addEventListener('mouseenter', () => descriptionPanel.style.display = 'block');
+        descriptionPanel.addEventListener('mouseenter', () => descriptionPanel.style.display = 'block');
+        largeImage.addEventListener('mouseleave', () => descriptionPanel.style.display = 'none');
+        descriptionPanel.addEventListener('mouseleave', () => descriptionPanel.style.display = 'none');
 
         expandedImage.classList.add('show');
-        expandedImage.innerHTML =
+        /* expandedImage.innerHTML =
         `<span>X</span>
         <img src=${imageUrl}>
-        <div>${description}</div>`;
+        <div>${description}</div>`; */
 
-        expandedImage.addEventListener('click', () =>
-            expandedImage.classList.remove('show')
 
-        )
+        expandedImage.addEventListener('click', event => {
+            if (event.target === expandedImage) {
+                expandedImage.classList.remove('show');
+            }
+        })
     }
 
 }
