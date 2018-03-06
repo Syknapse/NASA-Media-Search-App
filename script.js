@@ -137,10 +137,10 @@ function expand(event) {
         largeImage.setAttribute('src', imageUrl);
         descriptionPanel.innerHTML = description;
 
-        largeImage.addEventListener('mouseenter', () => descriptionPanel.style.display = 'block');
-        descriptionPanel.addEventListener('mouseenter', () => descriptionPanel.style.display = 'block');
-        largeImage.addEventListener('mouseleave', () => descriptionPanel.style.display = 'none');
-        descriptionPanel.addEventListener('mouseleave', () => descriptionPanel.style.display = 'none');
+        largeImage.addEventListener('touchstart mouseenter', () => descriptionPanel.classList.add('show-image-description'));
+        descriptionPanel.addEventListener('touchstart mouseenter', () => descriptionPanel.classList.add('show-image-description'));
+        largeImage.addEventListener('touchend mouseleave', () => descriptionPanel.classList.remove('show-image-description'));
+        descriptionPanel.addEventListener('touchend mouseleave', () => descriptionPanel.classList.remove('show-image-description'));
 
         expandedImage.classList.add('show');
         /* expandedImage.innerHTML =

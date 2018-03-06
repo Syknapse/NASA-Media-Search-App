@@ -144,21 +144,6 @@ input:hover {
     cursor: pointer;
 }
 
-.image-description {
-    display: none;
-    font-size: 1em;
-    position: absolute;
-    top: 10vh;
-    left: 5%;
-    width: 90%;
-    max-height: 80vh;
-    color: beige;
-    background: #000000a6;
-    padding: 10px 5px;
-    box-sizing: border-box;
-    transition: 0.3s ease;
-}
-
 .show {
     position: fixed;
     width: 100%;
@@ -177,7 +162,21 @@ input:hover {
     font-size: 3em;
 }
 
-/* .show .image-description {
-    background-color: aqua;
+.image-description {
+    display: none;
     font-size: 1em;
-} */
+    position: absolute;
+    top: 10vh;
+    left: 5%;
+    width: 90%;
+    max-height: 80vh;
+    color: beige;
+    background: #000000a6;
+    padding: 10px 5px;
+    box-sizing: border-box;
+    transition: 0.3s ease;
+}
+
+.show-image-description {
+    display: block;
+}
